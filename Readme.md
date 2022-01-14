@@ -8,13 +8,13 @@
 4. check packages: ```pip list```
 
 required base packages:
-1. base flask - ```pip install flask```
-2. marshmallow intergration - ```pip install flask-marshmallow```
-3. marshmallow sqlalchemy intergration - ```pip install marshmallow-sqlalchemy```
-4. sqlalchemy intergration - ```pip install flask-sqlalchemy ```
+1. Base flask - ```pip install flask```
+2. Marshmallow intergration - ```pip install flask-marshmallow```
+3. Marshmallow sqlalchemy intergration - ```pip install marshmallow-sqlalchemy```
+4. Sqlalchemy intergration - ```pip install flask-sqlalchemy ```
 
 
-generating table requirements:
-```python```
-```from app import db```
-```db.create_all()```
+generating DB steps:
+1. Open python client - ```python```
+2. Import db - ```from app import db```
+3. Generate tables - ```db.create_all()```
