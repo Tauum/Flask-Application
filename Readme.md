@@ -3,8 +3,6 @@
      - in vsc or anything else: py -m venv myenv
          - in these others activate the env - myenv\Scripts\activate
 
-2. generate a new primary app file 
-
 3. to run either in terminal: ```flask run``` or in pycharmm click green play
 
 4. check packages: ```pip list```
