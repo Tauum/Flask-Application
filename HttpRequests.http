@@ -1,0 +1,518 @@
+GET http://127.0.0.1:5000/
+###
+GET http://127.0.0.1:5000/users/count
+###
+##########################################################################
+GET http://127.0.0.1:5000/users
+###
+GET http://127.0.0.1:5000/users/4
+### FAIL BECAUSE DOESNT EXIST
+GET http://127.0.0.1:5000/users/99999
+###
+GET http://127.0.0.1:5000/users/get
+Content-Type: application/json
+
+{
+"id" : "1"
+}
+### FAIL NO ID PASSED
+GET http://127.0.0.1:5000/users/get
+Content-Type: application/json
+
+{
+
+}
+### FAIL ID OOR
+GET http://127.0.0.1:5000/users/get
+Content-Type: application/json
+
+{
+  "id" : "99999"
+}
+##########################################################################
+### GET SINGLE BY USERNAME
+GET http://127.0.0.1:5000/users/get-single-by-username
+Content-Type: application/json
+
+{
+  "username" : "Francis"
+}
+### FAIL - INVALID USERNAME
+GET http://127.0.0.1:5000/users/get-single-by-username
+Content-Type: application/json
+
+{
+}
+#########################################################################
+### GET LIST BY ACCESS
+GET http://127.0.0.1:5000/users/get-list-by-access
+Content-Type: application/json
+
+{
+  "access" : "False"
+}
+### FAIL MISSING CORRECT ACCEESS
+GET http://127.0.0.1:5000/users/get-list-by-access
+Content-Type: application/json
+
+{
+  "access" : "XXX"
+}
+##########################################################################
+### POST REGULAR
+POST http://127.0.0.1:5000/users/add
+Content-Type: application/json
+
+{
+  "username" : "Francis",
+  "password" : "Morrissey"
+}
+### FAIL MISSING FIELD
+POST http://127.0.0.1:5000/users/add
+Content-Type: application/json
+
+{
+  "username" : "Francis"
+}
+##########################################################################
+### POST ADVANCED
+POST http://127.0.0.1:5000/users/add-advanced
+Content-Type: application/json
+
+{
+  "username" : "bb",
+  "password" : "aaaaaaaaaa",
+  "access" : "False"
+}
+### FAIL MISSING FIELD
+POST http://127.0.0.1:5000/users/add-advanced
+Content-Type: application/json
+
+{
+  "username" : "test",
+  "access" : "False"
+}
+### FAIL WRONG ACCESS TYPE
+POST http://127.0.0.1:5000/users/add-advanced
+Content-Type: application/json
+
+{
+  "username" : "admin",
+  "password" : "abcdefghij",
+  "access" : "True"
+}
+### FAIL PASSWORD REQUIREMENTS NOT MET
+POST http://127.0.0.1:5000/users/add-advanced
+Content-Type: application/json
+
+{
+  "username" : "bb",
+  "password" : "aaaa",
+  "access" : "True"
+}
+
+##########################################################################
+### UPDATE PASSWORD
+PATCH http://127.0.0.1:5000/users/update-password
+Content-Type: application/json
+
+{
+  "username" : "admin",
+  "current_password": "abcdefghij",
+  "update_password" : "abcdefghijklm"
+}
+### FAIL INCORRECT CURRENT PASSWORD
+PATCH http://127.0.0.1:5000/users/update-password
+Content-Type: application/json
+
+{
+  "username" : "Francis",
+  "current_password": "aaaaaa",
+  "update_password" : "password1990"
+}
+### FAIL MISSING FIELD
+PATCH http://127.0.0.1:5000/users/update-password
+Content-Type: application/json
+
+{
+  "username" : "Francis",
+  "current_password": "Morrissey"
+}
+##########################################################################
+### FULL UPDATE
+PUT http://127.0.0.1:5000/users/update-advanced
+Content-Type: application/json
+
+{
+  "id" : "1",
+  "username" : "bb",
+  "password" : "bbb",
+  "access" : "True"
+}
+### FAIL MISSING FIELD
+PUT http://127.0.0.1:5000/users/update-advanced
+Content-Type: application/json
+
+{
+  "id" : "1",
+  "username" : "aa",
+  "access" : "True"
+}
+### FAIL MISSING ID
+PUT http://127.0.0.1:5000/users/update-advanced
+Content-Type: application/json
+
+{
+  "username" : "aa",
+  "password" : "bbb",
+  "access" : "True"
+}
+### FAIL ID OOR
+PUT http://127.0.0.1:5000/users/update-advanced
+Content-Type: application/json
+
+{
+  "id" : "999999",
+  "username" : "aa",
+  "password" : "bbb",
+  "access" : "True"
+}
+##########################################################################
+PATCH http://127.0.0.1:5000/users/patch
+Content-Type: application/json
+
+{
+  "id" : "1",
+  "access" : "True"
+}
+### PATCHING MULTIPLE
+PATCH http://127.0.0.1:5000/users/patch
+Content-Type: application/json
+
+{
+  "id" : "2",
+  "password":"abcdefghij",
+  "access" : "True"
+}
+###
+PATCH http://127.0.0.1:5000/users/patch
+Content-Type: application/json
+
+{
+  "id" : "1",
+  "access" : "True"
+}
+### FAIL INVALID ACCESS
+PATCH http://127.0.0.1:5000/users/patch
+Content-Type: application/json
+
+{
+  "id" : "1",
+  "access" : "aa"
+}
+### FAIL INVALID ID
+PATCH http://127.0.0.1:5000/users/patch
+Content-Type: application/json
+
+{
+  "id" : "400",
+  "access" : "True"
+}
+### FAIL NO ARGUMENTS
+PATCH http://127.0.0.1:5000/users/patch
+Content-Type: application/json
+
+{
+  "id" : "1"
+}
+##########################################################################
+### DELETE
+DELETE http://127.0.0.1:5000/users/delete/1
+### FAIL ID OOR
+DELETE http://127.0.0.1:5000/users/delete/300
+### DELETE BY USERNAME
+DELETE http://127.0.0.1:5000/users/delete-by-username
+Content-Type: application/json
+
+{
+  "username" : "Francis"
+}
+### FAIL INVALID USERNAME
+DELETE http://127.0.0.1:5000/users/delete-by-username
+Content-Type: application/json
+
+{
+  "username" : "AAAAAAAAAA"
+}
+### FAIL NO FIELD PASSED
+DELETE http://127.0.0.1:5000/users/delete-by-username
+Content-Type: application/json
+
+{
+  "username" : "Francis"
+}
+##########################################################################
+### prove login works appropriately when not providing details
+GET http://127.0.0.1:5000/Login
+### Basic authorization with variables.
+GET http://127.0.0.1:5000/Login2
+Authorization: Basic Francis Morrissey
+###
+GET http://127.0.0.1:5000/Login2
+Authorization: Basic admin abcdefghij
+
+### FAIL INCORRECT PASSWORD
+GET http://127.0.0.1:5000/Login2
+Authorization: Basic Francis Morrissey
+### V THIS DOESNT WORK: missing valid token
+GET http://127.0.0.1:5000/users
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IkZyYW5jaXMiLCJhY2Nlc3MiOnRydWUsImV4cCI6MTY0MTQwNDMzN30.U94p29oRSoWeYlcRdPvgiYYZcjehLHtcOLFEWXEZpuE
+### V THIS DOESNT WORK: missing valid token
+GET http://127.0.0.1:5000/users
+Content-Type: application/json
+x-access-tokens : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiYWNjZXNzIjp0cnVlLCJleHAiOjE2NDE1NjczNzl9.vaHO4XOq8mIQgvUqu48vcIqHVzyZAA5g7H9k_kPafrg"
+
+{
+}
+##########################################################################
+GET http://127.0.0.1:5000/weathers
+###
+GET http://127.0.0.1:5000/weathers/1
+###
+GET http://127.0.0.1:5000/weathers/get
+Content-Type: application/json
+
+{
+"id" : "1"
+}
+### FAIL MISSING ID
+GET http://127.0.0.1:5000/weathers/get
+Content-Type: application/json
+
+{
+"id" : ""
+}
+### FAIL ID OOR
+GET http://127.0.0.1:5000/weathers/get
+Content-Type: application/json
+
+{
+"id" : "300"
+}
+###
+GET http://127.0.0.1:5000/weathers/get-by-day
+Content-Type: application/json
+
+{
+  "date" : "2021-12-30"
+}
+### FAIL - DATE OOR
+GET http://127.0.0.1:5000/weathers/get-by-day
+Content-Type: application/json
+
+{
+"date" : "2021-01-01"
+}
+### FAIL - MISSING FIELD
+GET http://127.0.0.1:5000/weathers/get-by-day
+Content-Type: application/json
+
+{
+}
+###
+GET http://127.0.0.1:5000/weathers/get-by-most-recent-and-location
+Content-Type: application/json
+
+{
+  "longitude":"45.5",
+  "latitude":"92"
+}
+###
+GET http://127.0.0.1:5000/weathers/get-by-day-temp-range
+Content-Type: application/json
+
+{
+"date" : "2021-12-30"
+}
+### FAIL - DATE OOR
+GET http://127.0.0.1:5000/weathers/get-by-day-temp-range
+Content-Type: application/json
+
+{
+"date" : "2021-12-30"
+}
+### FAIL - MISSING FIELD
+GET http://127.0.0.1:5000/weathers/get-by-day-temp-range
+Content-Type: application/json
+
+{
+}
+###
+GET http://127.0.0.1:5000/weathers/get-by-day-stats
+Content-Type: application/json
+
+{
+"date" : "2022-01-06"
+}
+### FAIL DATE OOR
+GET http://127.0.0.1:5000/weathers/get-by-day-stats
+Content-Type: application/json
+
+{
+"date" : "2000-01-30"
+}
+##########################################################################
+POST http://127.0.0.1:5000/weathers/add
+Content-Type: application/json
+
+{
+  "longitude": "45.5",
+  "latitude": "92.6",
+  "hygrometer": "55.5",
+  "thermometer": "5",
+  "udometer": "25",
+  "anemometer": "400",
+  "vane": "100"
+}
+### FAIL DATA OOR
+POST http://127.0.0.1:5000/weathers/add
+Content-Type: application/json
+
+{
+  "longitude": "45.5",
+  "latitude": "92.6",
+  "hygrometer": "500.5",
+  "thermometer": "22.5",
+  "udometer": "2200",
+  "anemometer": "250",
+  "vane": "92"
+}
+### FAIL INCORRECT FORMAT
+POST http://127.0.0.1:5000/weathers/add
+Content-Type: application/json
+
+{
+  "longitude": "xxx",
+  "latitude": "92.6",
+  "hygrometer": "50.5",
+  "thermometer": "22.5",
+  "udometer": "2200",
+  "anemometer": "250",
+  "vane": "92"
+}
+##########################################################################
+PUT http://127.0.0.1:5000/weathers/update
+Content-Type: application/json
+{
+  "id" : "1",
+  "longitude" : "2",
+  "latitude" : "3",
+  "hygrometer" : "2",
+  "thermometer" : "22.2",
+  "udometer" : "2000",
+  "anemometer" : "250",
+  "vane" : "255"
+}
+### FAIL DATA OOR
+PUT http://127.0.0.1:5000/weathers/update
+Content-Type: application/json
+{
+  "id" : "1",
+  "longitude": "45.5",
+  "latitude": "92.6",
+  "hygrometer": "500.5",
+  "thermometer": "22.5",
+  "udometer": "2200",
+  "anemometer": "250",
+  "vane": "92"
+}
+### FAIL INCORRECT FORMAT
+PUT http://127.0.0.1:5000/weathers/update
+Content-Type: application/json
+{
+  "id" : "1",
+  "longitude": "xxx",
+  "latitude": "92.6",
+  "hygrometer": "50.5",
+  "thermometer": "22.5",
+  "udometer": "2200",
+  "anemometer": "250",
+  "vane": "92"
+}
+##########################################################################
+PATCH http://127.0.0.1:5000/weathers/patch
+Content-Type: application/json
+
+{
+  "id" : "1",
+  "longitude" : "50.52"
+}
+### PATCHING MULTIPLE
+PATCH http://127.0.0.1:5000/weathers/patch
+Content-Type: application/json
+
+{
+  "id" : "1",
+  "longitude" : "99.52",
+  "latitude" : "99.52"
+}
+### FAIL INVALID FIELD
+PATCH http://127.0.0.1:5000/weathers/patch
+Content-Type: application/json
+
+{
+  "id" : "6",
+  "vane" : ""
+}
+### FAIL MISSING FIELD
+PATCH http://127.0.0.1:5000/weathers/patch
+Content-Type: application/json
+
+{
+  "id" : "6"
+}
+### FAIL ID OOR
+PATCH http://127.0.0.1:5000/weathers/patch
+Content-Type: application/json
+
+{
+  "id" : "400",
+  "longitude" : "50.52"
+}
+##########################################################################
+### update date this fails
+PUT http://127.0.0.1:5000/weathers/update-date
+Content-Type: application/json
+{
+  "id" : "1",
+  "date" : "2000-12-28T20:50:11"
+}
+### update to fail because missing field
+PUT http://127.0.0.1:5000/weathers/update
+Content-Type: application/json
+{
+  "id" : "1",
+  "longitude" : "2.5",
+  "latitude" : "3.5",
+  "hygrometer" : "2.5",
+  "thermometer" : "22.2",
+  "udometer" : "2.1",
+  "anemometer" : "250"
+}
+### update to fail because wrong/missing id
+PUT http://127.0.0.1:5000/weathers/update
+Content-Type: application/json
+
+{
+  "longitude" : "2.5",
+  "latitude" : "3.5",
+  "hygrometer" : "2.5",
+  "thermometer" : "22.2",
+  "udometer" : "2.1",
+  "anemometer" : "250"
+}
+#########################################################################
+### DELETE
+DELETE http://127.0.0.1:5000/weathers/delete/4
+### FAIL ID OOR
+DELETE http://127.0.0.1:5000/weathers/delete/300
